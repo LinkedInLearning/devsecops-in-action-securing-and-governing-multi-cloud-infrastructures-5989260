@@ -21,8 +21,8 @@ resource "azurerm_public_ip" "red30tech_public_ip" {
   name                = "red30tech-public-ip"
   location            = azurerm_resource_group.red30tech_rg.location
   resource_group_name = azurerm_resource_group.red30tech_rg.name
-  allocation_method   = "Dynamic"
-  sku                 = "Basic"
+  allocation_method   = "Static"
+  sku                 = "Standard"
 }
 
 resource "azurerm_network_security_group" "red30tech_nsg" {
