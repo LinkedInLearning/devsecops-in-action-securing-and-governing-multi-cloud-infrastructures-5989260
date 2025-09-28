@@ -1,0 +1,59 @@
+name: 'Azure Terraform'
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'infra/azure/**'
+  pull_request:
+    paths:
+      - 'infra/azure/**'
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  azure-terraform:
+    name: 'Azure Terraform'
+    runs-on: ubuntu-latest
+    env:
+      TF_VAR_admin_password: ${{ secrets.ADMIN_PASSWORD }}
+    defaults:
+      run:
+        shell: bash
+        working-directory: infra/azure
+
+    steps:
+    # Checkout the repository to the GitHub Actions runner
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    # Authenticate to Azure
+    - name: 'Az CLI login'
+      uses: azure/login@v2
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+    # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+
+    # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
+    - name: Terraform Init
+      run: terraform init
+
+    # Checks that all Terraform configuration files adhere to a canonical format
+    - name: Terraform Format
+      run: terraform fmt -check
+
+    # Generates an execution plan for Terraform
+    - name: Terraform Plan
+      run: terraform plan -input=false
+
+      # Only on push to "main", change infrastructure according to Terraform configuration files
+    - name: Terraform Apply
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      run: terraform apply -auto-approve -input=false
