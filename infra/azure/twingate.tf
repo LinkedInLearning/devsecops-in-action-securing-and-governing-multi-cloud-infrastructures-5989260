@@ -20,7 +20,7 @@ resource "azurerm_container_group" "twingate_connector_container" {
 
   container {
     name   = "twingateconnector"
-    image  = "twingate/connector:1"
+    image  = "twingate/connector:1.78.0"
     cpu    = "1"
     memory = "1.5"
     environment_variables = {
