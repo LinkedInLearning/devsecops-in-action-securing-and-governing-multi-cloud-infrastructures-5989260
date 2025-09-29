@@ -1,5 +1,6 @@
 locals {
-  backend_b64 = base64encode(file("${path.module}/../../app/backend/backend.js"))
+  backend_b64     = base64encode(file("${path.module}/../../app/backend/backend.js"))
+  backend_pkg_b64 = base64encode(file("${path.module}/../../app/backend/package.json"))
 }
 
 resource "random_password" "linux_admin" {
@@ -69,41 +70,50 @@ resource "azurerm_linux_virtual_machine" "red30tech_vm" {
     version   = "latest"
   }
 
-  # cloud-init writes your repo file and runs it
   custom_data = base64encode(<<-CLOUDINIT
     #cloud-config
     package_update: true
     packages:
-      - nodejs
-
-    write_files:
-      - path: /opt/backend/backend.js
-        permissions: "0755"
-        encoding: b64
-        content: ${local.backend_b64}
-
-      - path: /etc/systemd/system/backend.service
-        permissions: "0644"
-        content: |
-          [Unit]
-          Description=Backend Node app
-          After=network-online.target
-          Wants=network-online.target
-
-          [Service]
-          WorkingDirectory=/opt/backend
-          ExecStart=/usr/bin/node /opt/backend/backend.js
-          Restart=always
-          RestartSec=2
-          User=root
-
-          [Install]
-          WantedBy=multi-user.target
+      - ca-certificates
+      - curl
+      - gnupg
 
     runcmd:
+      # Install Node 18 from NodeSource
+      - install -m 0755 -d /etc/apt/keyrings
+      - curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+      - echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_18.x nodistro main" > /etc/apt/sources.list.d/nodesource.list
+      - apt-get update -y
+      - apt-get install -y nodejs
+
+      # Write app files
+      - mkdir -p /opt/backend
+      - echo "${local.backend_b64}"  | base64 -d > /opt/backend/backend.js
+      - echo "${local.backend_pkg_b64}" | base64 -d > /opt/backend/package.json
+      - cd /opt/backend && npm install --omit=dev
+
+      # Systemd service
+      - |
+        cat >/etc/systemd/system/backend.service <<'UNIT'
+        [Unit]
+        Description=Backend Node app
+        After=network-online.target
+        Wants=network-online.target
+
+        [Service]
+        WorkingDirectory=/opt/backend
+        ExecStart=/usr/bin/node /opt/backend/backend.js
+        Restart=always
+        RestartSec=2
+        User=root
+
+        [Install]
+        WantedBy=multi-user.target
+        UNIT
+
       - systemctl daemon-reload
       - systemctl enable --now backend.service
-  CLOUDINIT
+    CLOUDINIT
   )
 
   os_disk {

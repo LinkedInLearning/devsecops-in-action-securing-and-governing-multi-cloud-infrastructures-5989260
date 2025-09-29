@@ -46,7 +46,7 @@ resource "aws_instance" "frontend" {
     #!/usr/bin/env bash
     set -eux
 
-    # Node 18 LTS (Ubuntu default is Node 12)
+    # Node 18 LTS Install
     apt-get update -y
     apt-get install -y ca-certificates curl gnupg
     install -m 0755 -d /etc/apt/keyrings
