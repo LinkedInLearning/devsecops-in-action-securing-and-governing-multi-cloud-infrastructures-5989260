@@ -18,6 +18,12 @@ resource "azurerm_container_group" "twingate_connector_container" {
   subnet_ids          = [azurerm_subnet.twingate_azure_container_subnet.id]
   os_type             = "Linux"
 
+  image_registry_credential {
+    server   = "index.docker.io"
+    username = var.dockerhub_username
+    password = var.dockerhub_token
+  }
+
   container {
     name   = "twingateconnector"
     image  = "twingate/connector:1.78.0"

@@ -19,6 +19,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       TF_VAR_tg_api_key: ${{ secrets.TWINGATE_API_KEY }}
+      TF_VAR_dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
+      TF_VAR_dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}
     defaults:
       run:
         shell: bash
