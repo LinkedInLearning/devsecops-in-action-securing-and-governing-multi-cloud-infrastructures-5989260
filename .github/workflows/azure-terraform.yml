@@ -18,7 +18,7 @@ jobs:
     name: 'Azure Terraform'
     runs-on: ubuntu-latest
     env:
-      TF_VAR_admin_password: ${{ secrets.ADMIN_PASSWORD }}
+      TF_VAR_tg_api_key: ${{ secrets.TWINGATE_API_KEY }}
     defaults:
       run:
         shell: bash

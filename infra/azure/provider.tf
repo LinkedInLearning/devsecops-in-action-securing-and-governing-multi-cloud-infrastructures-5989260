@@ -11,8 +11,16 @@ terraform {
       source  = "hashicorp/azurerm"
       version = "~> 3.0"
     }
+    twingate = {
+      source = "twingate/twingate"
+    }
   }
 }
 provider "azurerm" {
   features {}
+}
+
+provider "twingate" {
+  api_token = var.tg_api_key
+  network   = var.tg_network
 }
