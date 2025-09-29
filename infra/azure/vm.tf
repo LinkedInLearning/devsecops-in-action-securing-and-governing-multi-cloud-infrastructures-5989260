@@ -7,22 +7,51 @@ resource "random_password" "linux_admin" {
   special = true
 }
 
-# open only :3001 on your existing NSG
-resource "azurerm_network_security_rule" "backend_3001" {
-  name                        = "Backend-3001"
-  priority                    = 1200
-  direction                   = "Inbound"
-  access                      = "Allow"
-  protocol                    = "Tcp"
-  source_port_range           = "*"
-  destination_port_range      = "3001"
-  source_address_prefix       = "*"
-  destination_address_prefix  = "*"
-  resource_group_name         = azurerm_resource_group.red30tech_rg.name
-  network_security_group_name = azurerm_network_security_group.red30tech_nsg.name
+resource "azurerm_public_ip" "red30tech_public_ip" {
+  name                = "red30tech-public-ip"
+  location            = azurerm_resource_group.red30tech_rg.location
+  resource_group_name = azurerm_resource_group.red30tech_rg.name
+  allocation_method   = "Static"
+  sku                 = "Standard"
 }
 
-# if you previously had SSH, keep it closed; no keys/passwords needed for port 22 here
+resource "azurerm_network_security_group" "red30tech_nsg" {
+  name                = "red30tech-nsg"
+  location            = azurerm_resource_group.red30tech_rg.location
+  resource_group_name = azurerm_resource_group.red30tech_rg.name
+
+  security_rule {
+    name                       = "HTTP"
+    priority                   = 1002
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "3001"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+}
+
+resource "azurerm_network_interface_security_group_association" "red30tech_nic_nsg" {
+  network_interface_id      = azurerm_network_interface.red30tech_nic.id
+  network_security_group_id = azurerm_network_security_group.red30tech_nsg.id
+}
+
+resource "azurerm_network_interface" "red30tech_nic" {
+  name                = "red30tech-nic"
+  location            = azurerm_resource_group.red30tech_rg.location
+  resource_group_name = azurerm_resource_group.red30tech_rg.name
+
+  ip_configuration {
+    name                          = "internal"
+    subnet_id                     = azurerm_subnet.red30tech_subnet.id
+    private_ip_address_allocation = "Dynamic"
+    public_ip_address_id          = azurerm_public_ip.red30tech_public_ip.id
+  }
+}
+
+
 resource "azurerm_linux_virtual_machine" "red30tech_vm" {
   name                            = "red30tech-vm"
   location                        = azurerm_resource_group.red30tech_rg.location
