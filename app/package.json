@@ -1,0 +1,9 @@
+{
+  "name": "simple-node-apps",
+  "private": true,
+  "version": "1.0.0",
+  "packageManager": "pnpm@10.17.1",
+  "scripts": {
+    "dev": "pnpm -r --parallel start"
+  }
+}
