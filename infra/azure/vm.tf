@@ -2,6 +2,11 @@ locals {
   backend_b64 = base64encode(file("${path.module}/../../app/backend/backend.js"))
 }
 
+resource "random_password" "linux_admin" {
+  length  = 12
+  special = true
+}
+
 # open only :3001 on your existing NSG
 resource "azurerm_network_security_rule" "backend_3001" {
   name                        = "Backend-3001"
@@ -19,16 +24,14 @@ resource "azurerm_network_security_rule" "backend_3001" {
 
 # if you previously had SSH, keep it closed; no keys/passwords needed for port 22 here
 resource "azurerm_linux_virtual_machine" "red30tech_vm" {
-  name                = "red30tech-vm"
-  location            = azurerm_resource_group.red30tech_rg.location
-  resource_group_name = azurerm_resource_group.red30tech_rg.name
-  size                = "Standard_B1s"
-  admin_username      = "azureuser"
-
-  # disable SSH keys/password if you like; port 22 isn't open anyway
-  disable_password_authentication = true
-
-  network_interface_ids = [azurerm_network_interface.red30tech_nic.id]
+  name                            = "red30tech-vm"
+  location                        = azurerm_resource_group.red30tech_rg.location
+  resource_group_name             = azurerm_resource_group.red30tech_rg.name
+  size                            = "Standard_B1s"
+  admin_username                  = "azureuser"
+  disable_password_authentication = false
+  admin_password                  = random_password.linux_admin.result
+  network_interface_ids           = [azurerm_network_interface.red30tech_nic.id]
 
   source_image_reference {
     publisher = "Canonical"
