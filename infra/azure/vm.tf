@@ -52,7 +52,6 @@ resource "azurerm_network_interface" "red30tech_nic" {
   }
 }
 
-
 resource "azurerm_linux_virtual_machine" "red30tech_vm" {
   name                            = "red30tech-vm"
   location                        = azurerm_resource_group.red30tech_rg.location

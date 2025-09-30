@@ -56,7 +56,6 @@ resource "aws_instance" "frontend" {
     apt-get install -y nodejs
 
     mkdir -p /opt/frontend
-
     # write repo files
     echo "${local.frontend_b64}"  | base64 -d > /opt/frontend/frontend.js
     echo "${local.frontend_pkg_b64}" | base64 -d > /opt/frontend/package.json
@@ -84,6 +83,15 @@ resource "aws_instance" "frontend" {
 
     systemctl daemon-reload
     systemctl enable --now frontend.service
+    
+    # --- Twingate Headless Client ---
+    curl -fsSL https://binaries.twingate.com/client/linux/install.sh | bash
+    install -d -m 0700 /etc/twingate
+    cat >/etc/twingate/service_key.json <<EOF
+    ${twingate_service_account_key.aws_frontend_sa_key.token}
+    EOF
+    /usr/bin/twingate setup --headless /etc/twingate/service_key.json
+    systemctl enable --now twingate
   BASH
 
   tags = { Name = "frontend" }
