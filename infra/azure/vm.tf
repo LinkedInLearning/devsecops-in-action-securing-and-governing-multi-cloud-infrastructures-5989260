@@ -8,6 +8,15 @@ resource "random_password" "linux_admin" {
   special = true
 }
 
+# Only for debugging purposes
+resource "azurerm_public_ip" "red30tech_public_ip" {
+  name                = "red30tech-public-ip"
+  location            = azurerm_resource_group.red30tech_rg.location
+  resource_group_name = azurerm_resource_group.red30tech_rg.name
+  allocation_method   = "Static"
+  sku                 = "Standard"
+}
+
 resource "azurerm_network_security_group" "red30tech_nsg" {
   name                = "red30tech-nsg"
   location            = azurerm_resource_group.red30tech_rg.location
@@ -40,6 +49,7 @@ resource "azurerm_network_interface" "red30tech_nic" {
     name                          = "internal"
     subnet_id                     = azurerm_subnet.red30tech_subnet.id
     private_ip_address_allocation = "Dynamic"
+    public_ip_address_id          = azurerm_public_ip.red30tech_public_ip.id
   }
 }
 
