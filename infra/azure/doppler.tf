@@ -22,7 +22,7 @@ resource "doppler_environment" "dev" {
 resource "doppler_config" "dev_azure" {
   project     = doppler_project.backend.name
   environment = doppler_environment.dev.slug
-  name        = "dev_azure"
+  name        = "dev"
 }
 
 resource "doppler_service_token" "backend_dev_azure" {
