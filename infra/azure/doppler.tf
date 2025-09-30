@@ -19,23 +19,9 @@ resource "doppler_environment" "dev" {
   slug    = "dev"
 }
 
-resource "doppler_config" "dev_azure" {
-  project     = doppler_project.backend.name
-  environment = doppler_environment.dev.slug
-  name        = "dev_aws"
-  inheritable = false
-}
-
-resource "doppler_config" "dev_azure" {
-  project     = doppler_project.backend.name
-  environment = doppler_environment.dev.slug
-  name        = "dev_azure"
-  inheritable = false
-}
-
 resource "doppler_service_token" "backend_dev_azure" {
   project = doppler_project.backend.name
-  config  = doppler_config.dev_azure.name
+  config  = doppler_environment.dev.slug
   name    = "backend-dev-azure-readonly"
   access  = "read"
 }
