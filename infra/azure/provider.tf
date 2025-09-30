@@ -12,7 +12,12 @@ terraform {
       version = "~> 3.0"
     }
     twingate = {
-      source = "twingate/twingate"
+      source  = "twingate/twingate"
+      version = "3.5.0"
+    }
+    doppler = {
+      source  = "DopplerHQ/doppler"
+      version = "1.20.0"
     }
   }
 }

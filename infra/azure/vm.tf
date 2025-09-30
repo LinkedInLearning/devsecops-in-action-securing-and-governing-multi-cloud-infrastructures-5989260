@@ -60,50 +60,61 @@ resource "azurerm_linux_virtual_machine" "red30tech_vm" {
     version   = "latest"
   }
 
-  custom_data = base64encode(<<-CLOUDINIT
-    #cloud-config
-    package_update: true
-    packages:
-      - ca-certificates
-      - curl
-      - gnupg
+  custom_data = base64encode(<<-BASH
+    #!/usr/bin/env bash
+    set -eux
 
-    runcmd:
-      # Install Node 18 from NodeSource
-      - install -m 0755 -d /etc/apt/keyrings
-      - curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-      - echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_18.x nodistro main" > /etc/apt/sources.list.d/nodesource.list
-      - apt-get update -y
-      - apt-get install -y nodejs
+    # Node 18 LTS Install
+    apt-get update -y
+    apt-get install -y ca-certificates curl gnupg
+    install -m 0755 -d /etc/apt/keyrings
+    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_18.x nodistro main" > /etc/apt/sources.list.d/nodesource.list
+    apt-get update -y
+    apt-get install -y nodejs
 
-      # Write app files
-      - mkdir -p /opt/backend
-      - echo "${local.backend_b64}"  | base64 -d > /opt/backend/backend.js
-      - echo "${local.backend_pkg_b64}" | base64 -d > /opt/backend/package.json
-      - cd /opt/backend && npm install --omit=dev
+    # Write app files
+    mkdir -p /opt/backend
+    echo "${local.backend_b64}"      | base64 -d > /opt/backend/backend.js
+    echo "${local.backend_pkg_b64}"  | base64 -d > /opt/backend/package.json
 
-      # Systemd service
-      - |
-        cat >/etc/systemd/system/backend.service <<'UNIT'
-        [Unit]
-        Description=Backend Node app
-        After=network-online.target
-        Wants=network-online.target
+    # Install Dependencies
+    cd /opt/backend
+    npm install --omit=dev
 
-        [Service]
-        WorkingDirectory=/opt/backend
-        ExecStart=/usr/bin/node /opt/backend/backend.js
-        Restart=always
-        RestartSec=2
-        User=root
+    # Create systemd service
+    cat >/etc/systemd/system/backend.service <<EOF
+    [Unit]
+    Description=Backend Node app
+    After=network-online.target
+    Wants=network-online.target
 
-        [Install]
-        WantedBy=multi-user.target
-        UNIT
+    [Service]
+    WorkingDirectory=/opt/backend
+    ExecStart=/usr/bin/node /opt/backend/backend.js
+    Restart=always
+    RestartSec=2
+    User=root
 
-      - systemctl daemon-reload
-      - systemctl enable --now backend.service
-    CLOUDINIT
+    [Install]
+    WantedBy=multi-user.target
+    EOF
+
+    systemctl daemon-reload
+    systemctl enable --now backend.service
+
+    # # --- Doppler Integration ---
+    # curl -Ls https://cli.doppler.com/install.sh | sh
+    # export DOPPLER_TOKEN="${doppler_service_token.backend_dev_azure.key}"
+    # doppler secrets download \
+    #   --project red30tech-backend \
+    #   --config dev-azure \
+    #   --format dotenv --no-file > /etc/default/backend.env
+    # sed -i '/^Environment=/d' /etc/systemd/system/backend.service
+    # echo "EnvironmentFile=/etc/default/backend.env" >> /etc/systemd/system/backend.service
+    # systemctl daemon-reload
+    # systemctl restart backend.service
+  BASH
   )
 
   os_disk {

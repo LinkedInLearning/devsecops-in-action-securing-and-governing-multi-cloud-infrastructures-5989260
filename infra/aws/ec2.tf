@@ -31,7 +31,7 @@ data "aws_ami" "ubuntu_2204" {
 }
 
 variable "backend_url" {
-  default = "http://api.red30tech.internal/api"
+  default = "http://api.red30tech.azure.internal/api"
   type    = string
 }
 
@@ -55,14 +55,16 @@ resource "aws_instance" "frontend" {
     apt-get update -y
     apt-get install -y nodejs
 
+    # Write app files
     mkdir -p /opt/frontend
-    # write repo files
     echo "${local.frontend_b64}"  | base64 -d > /opt/frontend/frontend.js
     echo "${local.frontend_pkg_b64}" | base64 -d > /opt/frontend/package.json
 
+    # Install Dependencies
     cd /opt/frontend
     npm install --omit=dev
 
+    # Create systemd service
     cat >/etc/systemd/system/frontend.service <<EOF
     [Unit]
     Description=Frontend Node app
@@ -92,6 +94,18 @@ resource "aws_instance" "frontend" {
     EOF
     /usr/bin/twingate setup --headless /etc/twingate/service_key.json
     systemctl enable --now twingate
+
+    # # --- Doppler Integration ---
+    # curl -Ls https://cli.doppler.com/install.sh | sh
+    # export DOPPLER_TOKEN="${doppler_service_token.frontend_dev_aws.key}"
+    # doppler secrets download \
+    #   --project red30tech-frontend \
+    #   --config dev-aws \
+    #   --format dotenv --no-file > /etc/default/frontend.env
+    # sed -i '/^Environment=/d' /etc/systemd/system/frontend.service
+    # echo "EnvironmentFile=/etc/default/frontend.env" >> /etc/systemd/system/frontend.service
+    # systemctl daemon-reload
+    # systemctl restart frontend.service
   BASH
 
   tags = { Name = "frontend" }

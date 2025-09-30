@@ -19,6 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       TF_VAR_tg_api_key: ${{ secrets.TWINGATE_API_KEY }}
+      TF_VAR_doppler_token: ${{ secrets.DOPPLER_TOKEN }}
     defaults:
       run:
         shell: bash

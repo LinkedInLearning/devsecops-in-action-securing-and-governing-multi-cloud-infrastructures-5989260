@@ -70,10 +70,10 @@ resource "twingate_group" "azure_devops" {
 }
 
 resource "twingate_resource" "azure_backend_resource" {
-  name              = "api.red30tech.internal"
+  name              = "api.red30tech.azure.internal"
   address           = azurerm_network_interface.red30tech_nic.private_ip_address
   remote_network_id = twingate_remote_network.azure_network.id
-  alias             = "api.red30tech.internal"
+  alias             = "api.red30tech.azure.internal"
   access_group {
     group_id = twingate_group.azure_devops.id
   }
