@@ -40,8 +40,9 @@ resource "aws_instance" "frontend" {
   instance_type               = "t3.micro"
   subnet_id                   = module.vpc.public_subnets[0]
   vpc_security_group_ids      = [aws_security_group.frontend_sg.id]
-  associate_public_ip_address = true
+  associate_public_ip_address = false
   user_data_replace_on_change = true
+  private_ip                  = "10.20.101.101"
   user_data                   = <<-BASH
     #!/usr/bin/env bash
     set -eux
@@ -111,6 +112,16 @@ resource "aws_instance" "frontend" {
   tags = { Name = "frontend" }
 }
 
+resource "aws_eip" "frontend" {
+  domain = "vpc"
+  tags   = { Name = "frontend-eip" }
+}
+
+resource "aws_eip_association" "frontend" {
+  instance_id   = aws_instance.frontend.id
+  allocation_id = aws_eip.frontend.id
+}
+
 output "frontend_url" {
-  value = "http://${aws_instance.frontend.public_ip}"
+  value = "http://${aws_eip.frontend.public_ip}"
 }

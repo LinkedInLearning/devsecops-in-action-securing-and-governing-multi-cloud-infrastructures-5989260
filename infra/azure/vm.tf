@@ -48,7 +48,8 @@ resource "azurerm_network_interface" "red30tech_nic" {
   ip_configuration {
     name                          = "internal"
     subnet_id                     = azurerm_subnet.red30tech_subnet.id
-    private_ip_address_allocation = "Dynamic"
+    private_ip_address_allocation = "Static"
+    private_ip_address            = "10.0.1.4"
     public_ip_address_id          = azurerm_public_ip.red30tech_public_ip.id
   }
 }

@@ -15,7 +15,7 @@ app.get("/", async (_req, res) => {
       <p>Backend environment: ${data.environment}</p>
     `);
   } catch (e) {
-    res.status(502).send(`Backend unavailable from frontend ${environment}`);
+    res.status(502).send(`Backend unavailable from frontend: ${environment}`);
   }
 });
 
