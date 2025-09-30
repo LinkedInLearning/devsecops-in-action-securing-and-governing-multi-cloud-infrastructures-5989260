@@ -11,7 +11,7 @@ resource "twingate_connector_tokens" "aws_connector_tokens" {
 }
 
 resource "aws_security_group" "twingate_sg" {
-  name   = "frontend-sg"
+  name   = "twingate-sg"
   vpc_id = module.vpc.vpc_id
   egress {
     from_port   = 0
