@@ -124,7 +124,7 @@ resource "azurerm_linux_virtual_machine" "red30tech_vm" {
     doppler secrets download \
       --project red30tech-backend \
       --config dev \
-      --format dotenv --no-file > /etc/default/backend.env
+      --format env --no-file > /etc/default/backend.env
     sed -i 's|^Environment=.*$|EnvironmentFile=/etc/default/backend.env|' /etc/systemd/system/backend.service
     systemctl daemon-reload
     systemctl restart backend.service
