@@ -47,6 +47,9 @@ resource "aws_instance" "frontend" {
     #!/usr/bin/env bash
     set -eux
 
+    export HOME=/root
+    mkdir -p "$HOME/.tmp"
+
     # Node 18 LTS Install
     apt-get update -y
     apt-get install -y ca-certificates curl gnupg
@@ -86,7 +89,7 @@ resource "aws_instance" "frontend" {
 
     systemctl daemon-reload
     systemctl enable --now frontend.service
-    
+
     # --- Twingate Headless Client ---
     curl -fsSL https://binaries.twingate.com/client/linux/install.sh | bash
     install -d -m 0700 /etc/twingate
@@ -97,14 +100,13 @@ resource "aws_instance" "frontend" {
     systemctl enable --now twingate
 
     # --- Doppler Integration ---
-    curl -Ls https://cli.doppler.com/install.sh | sh
+    curl -Ls https://cli.doppler.com/install.sh | bash
     export DOPPLER_TOKEN="${doppler_service_token.frontend_dev_aws.key}"
     doppler secrets download \
       --project red30tech-frontend \
-      --config dev-aws \
+      --config dev \
       --format dotenv --no-file > /etc/default/frontend.env
-    sed -i '/^Environment=/d' /etc/systemd/system/frontend.service
-    echo "EnvironmentFile=/etc/default/frontend.env" >> /etc/systemd/system/frontend.service
+    sed -i 's|^Environment=.*$|EnvironmentFile=/etc/default/frontend.env|' /etc/systemd/system/frontend.service
     systemctl daemon-reload
     systemctl restart frontend.service
   BASH

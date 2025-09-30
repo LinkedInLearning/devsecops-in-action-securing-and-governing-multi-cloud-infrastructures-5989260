@@ -75,6 +75,9 @@ resource "azurerm_linux_virtual_machine" "red30tech_vm" {
     #!/usr/bin/env bash
     set -eux
 
+    export HOME=/root
+    mkdir -p "$HOME/.tmp"
+
     # Node 18 LTS Install
     apt-get update -y
     apt-get install -y ca-certificates curl gnupg
@@ -101,6 +104,7 @@ resource "azurerm_linux_virtual_machine" "red30tech_vm" {
     Wants=network-online.target
 
     [Service]
+    Environment=ENVIRONMENT=
     WorkingDirectory=/opt/backend
     ExecStart=/usr/bin/node /opt/backend/backend.js
     Restart=always
@@ -115,14 +119,13 @@ resource "azurerm_linux_virtual_machine" "red30tech_vm" {
     systemctl enable --now backend.service
 
     # --- Doppler Integration ---
-    curl -Ls https://cli.doppler.com/install.sh | sh
+    curl -Ls https://cli.doppler.com/install.sh | bash
     export DOPPLER_TOKEN="${doppler_service_token.backend_dev_azure.key}"
     doppler secrets download \
       --project red30tech-backend \
-      --config dev-azure \
+      --config dev \
       --format dotenv --no-file > /etc/default/backend.env
-    sed -i '/^Environment=/d' /etc/systemd/system/backend.service
-    echo "EnvironmentFile=/etc/default/backend.env" >> /etc/systemd/system/backend.service
+    sed -i 's|^Environment=.*$|EnvironmentFile=/etc/default/backend.env|' /etc/systemd/system/backend.service
     systemctl daemon-reload
     systemctl restart backend.service
   BASH
