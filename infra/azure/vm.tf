@@ -114,17 +114,17 @@ resource "azurerm_linux_virtual_machine" "red30tech_vm" {
     systemctl daemon-reload
     systemctl enable --now backend.service
 
-    # # --- Doppler Integration ---
-    # curl -Ls https://cli.doppler.com/install.sh | sh
-    # export DOPPLER_TOKEN="${doppler_service_token.backend_dev_azure.key}"
-    # doppler secrets download \
-    #   --project red30tech-backend \
-    #   --config dev-azure \
-    #   --format dotenv --no-file > /etc/default/backend.env
-    # sed -i '/^Environment=/d' /etc/systemd/system/backend.service
-    # echo "EnvironmentFile=/etc/default/backend.env" >> /etc/systemd/system/backend.service
-    # systemctl daemon-reload
-    # systemctl restart backend.service
+    # --- Doppler Integration ---
+    curl -Ls https://cli.doppler.com/install.sh | sh
+    export DOPPLER_TOKEN="${doppler_service_token.backend_dev_azure.key}"
+    doppler secrets download \
+      --project red30tech-backend \
+      --config dev-azure \
+      --format dotenv --no-file > /etc/default/backend.env
+    sed -i '/^Environment=/d' /etc/systemd/system/backend.service
+    echo "EnvironmentFile=/etc/default/backend.env" >> /etc/systemd/system/backend.service
+    systemctl daemon-reload
+    systemctl restart backend.service
   BASH
   )
 

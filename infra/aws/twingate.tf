@@ -64,10 +64,10 @@ resource "twingate_group" "aws_devops" {
 }
 
 resource "twingate_resource" "aws_frontend_resource" {
-  name              = "red30tech.internal"
+  name              = "red30tech.aws.internal"
   address           = aws_instance.frontend.private_ip
   remote_network_id = twingate_remote_network.aws_network.id
-  alias             = "red30tech.internal"
+  alias             = "red30tech.aws.internal"
   access_group {
     group_id = twingate_group.aws_devops.id
   }
