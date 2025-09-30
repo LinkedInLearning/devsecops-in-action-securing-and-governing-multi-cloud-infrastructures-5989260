@@ -105,7 +105,7 @@ resource "aws_instance" "frontend" {
     doppler secrets download \
       --project red30tech-frontend \
       --config dev \
-      --format dotenv --no-file > /etc/default/frontend.env
+      --format env --no-file > /etc/default/frontend.env
     sed -i 's|^Environment=.*$|EnvironmentFile=/etc/default/frontend.env|' /etc/systemd/system/frontend.service
     systemctl daemon-reload
     systemctl restart frontend.service
