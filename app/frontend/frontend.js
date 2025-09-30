@@ -2,7 +2,7 @@ import express from "express";
 import fetch from "node-fetch";
 
 const app = express();
-const backendUrl = process.env.BACKEND_URL || "http://localhost:3001/api";
+const backendUrl = process.env.BACKEND_URL || "http://localhost/api";
 
 app.get("/", async (_req, res) => {
   try {
@@ -14,4 +14,4 @@ app.get("/", async (_req, res) => {
   }
 });
 
-app.listen(3000, () => console.log("Frontend running on :3000"));
+app.listen(80, () => console.log("Frontend running on :80"));

@@ -1,10 +1,4 @@
 terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 5.0"
-    }
-  }
   backend "s3" {
     bucket         = "tfstate15196"
     key            = "terraform.tfstate"
@@ -12,9 +6,23 @@ terraform {
     dynamodb_table = "tfstate-lock"
     encrypt        = true
   }
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+    twingate = {
+      source = "twingate/twingate"
+    }
+  }
 }
 
-# Configure the AWS Provider
 provider "aws" {
-  region = var.default_region
+  region = "us-east-1"
+}
+
+provider "twingate" {
+  api_token = var.tg_api_key
+  network   = var.tg_network
 }

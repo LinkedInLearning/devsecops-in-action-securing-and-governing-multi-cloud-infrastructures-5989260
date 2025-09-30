@@ -8,8 +8,8 @@ resource "aws_security_group" "frontend_sg" {
   vpc_id = module.vpc.vpc_id
 
   ingress {
-    from_port   = 3000
-    to_port     = 3000
+    from_port   = 80
+    to_port     = 80
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -31,7 +31,7 @@ data "aws_ami" "ubuntu_2204" {
 }
 
 variable "backend_url" {
-  default = "http://red30tech.xyz:3001/api"
+  default = "http://api.red30tech.internal/api"
   type    = string
 }
 
@@ -90,5 +90,5 @@ resource "aws_instance" "frontend" {
 }
 
 output "frontend_url" {
-  value = "http://${aws_instance.frontend.public_ip}:3000"
+  value = "http://${aws_instance.frontend.public_ip}"
 }

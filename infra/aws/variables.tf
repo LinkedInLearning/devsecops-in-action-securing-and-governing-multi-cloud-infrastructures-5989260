@@ -1,5 +1,9 @@
-variable "default_region" {
-  description = "Value of the Default AWS Region"
-  type        = string
-  default     = "us-east-1"
+variable "tg_network" {
+  type    = string
+  default = "red30tech"
+}
+
+variable "tg_api_key" {
+  type      = string
+  sensitive = true
 }

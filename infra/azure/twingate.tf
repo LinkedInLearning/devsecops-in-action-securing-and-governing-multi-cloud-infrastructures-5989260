@@ -47,7 +47,7 @@ resource "twingate_group" "azure_devops" {
 }
 
 resource "twingate_resource" "azure_backend_resource" {
-  name              = "red30tech.xyz:3001"
+  name              = "api.red30tech.internal"
   address           = azurerm_network_interface.red30tech_nic.private_ip_address
   remote_network_id = twingate_remote_network.azure_network.id
   access_group {
@@ -57,7 +57,7 @@ resource "twingate_resource" "azure_backend_resource" {
     allow_icmp = true
     tcp = {
       policy = "RESTRICTED"
-      ports  = ["3001"]
+      ports  = ["80"]
     }
     udp = {
       policy = "ALLOW_ALL"

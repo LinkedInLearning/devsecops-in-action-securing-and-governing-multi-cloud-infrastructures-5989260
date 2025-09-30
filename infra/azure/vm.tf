@@ -28,7 +28,7 @@ resource "azurerm_network_security_group" "red30tech_nsg" {
     access                     = "Allow"
     protocol                   = "Tcp"
     source_port_range          = "*"
-    destination_port_range     = "3001"
+    destination_port_range     = "80"
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
@@ -124,5 +124,5 @@ resource "azurerm_linux_virtual_machine" "red30tech_vm" {
 }
 
 output "backend_url" {
-  value = "http://${azurerm_public_ip.red30tech_public_ip.ip_address}:3001/api"
+  value = "http://${azurerm_public_ip.red30tech_public_ip.ip_address}/api"
 }
