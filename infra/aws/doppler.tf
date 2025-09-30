@@ -21,7 +21,7 @@ resource "doppler_environment" "dev" {
 
 resource "doppler_config" "dev_aws" {
   project     = doppler_project.frontend.name
-  environment = doppler_environment.dev.name
+  environment = doppler_environment.dev.slug
   name        = "dev-aws"
 }
 
