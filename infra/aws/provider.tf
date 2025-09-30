@@ -21,8 +21,3 @@ terraform {
 provider "aws" {
   region = "us-east-1"
 }
-
-provider "twingate" {
-  api_token = var.tg_api_key
-  network   = var.tg_network
-}

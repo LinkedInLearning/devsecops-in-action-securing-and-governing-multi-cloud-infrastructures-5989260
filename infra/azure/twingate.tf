@@ -1,3 +1,26 @@
+variable "tg_network" {
+  type    = string
+  default = "red30tech"
+}
+
+variable "tg_api_key" {
+  type      = string
+  sensitive = true
+}
+
+variable "dockerhub_username" {
+  type = string
+}
+
+variable "dockerhub_token" {
+  type = string
+}
+
+provider "twingate" {
+  api_token = var.tg_api_key
+  network   = var.tg_network
+}
+
 resource "twingate_remote_network" "azure_network" {
   name = "Red30Tech Azure Dev Remote Network"
 }
