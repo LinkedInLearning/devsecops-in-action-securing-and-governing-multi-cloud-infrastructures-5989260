@@ -135,5 +135,5 @@ resource "azurerm_linux_virtual_machine" "red30tech_vm" {
 }
 
 output "backend_url" {
-  value = "http://${azurerm_linux_virtual_machine.red30tech_vm.private_ip_address}/api"
+  value = "http://${azurerm_public_ip.red30tech_public_ip.ip_address}/api"
 }
