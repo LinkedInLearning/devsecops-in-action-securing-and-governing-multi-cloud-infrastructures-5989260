@@ -7,6 +7,22 @@ const environment = process.env.ENVIRONMENT || "unknown";
 
 app.get("/", async (_req, res) => {
   try {
+    res.send(`
+      <h1>Frontend (${environment})</h1>
+      <form method="POST" action="/submit">
+        <label>Say something to backend:</label><br/>
+        <input name="userinput" /><br/>
+        <button type="submit">Send</button>
+      </form>
+      <p>Or GET backend directly: <a href="/fetch">fetch /api</a></p>
+    `);
+  } catch (e) {
+    res.status(502).send(`Backend unavailable from frontend: ${environment}`);
+  }
+});
+
+app.get("/fetch", async (_req, res) => {
+  try {
     const response = await fetch(backendUrl);
     const data = await response.json();
     res.send(`
@@ -14,6 +30,21 @@ app.get("/", async (_req, res) => {
       <p>Backend says: ${data.message}</p>
       <p>Backend environment: ${data.environment}</p>
     `);
+  } catch (e) {
+    res.status(502).send(`Backend unavailable from frontend: ${environment}`);
+  }
+});
+
+app.post("/submit", async (req, res) => {
+  const userinput = req.body.userinput || "";
+  try {
+    const response = await fetch(backendUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ input: userinput })
+    });
+    const text = await response.text();
+    res.send(`<h2>Result from backend: </h2>${text}`);
   } catch (e) {
     res.status(502).send(`Backend unavailable from frontend: ${environment}`);
   }
