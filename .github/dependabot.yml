@@ -5,6 +5,7 @@ updates:
     directory: "/app/frontend"
     schedule:
       interval: daily
+    labels: [dependencies, javascript, aws, frontend]
 
   # Backend app (deployed on Azure)
   - package-ecosystem: "npm"
@@ -17,6 +18,7 @@ updates:
     directory: "/infra/aws"
     schedule:
       interval: daily
+    labels: [aws]
 
   # Terraform – Azure
   - package-ecosystem: "terraform"
