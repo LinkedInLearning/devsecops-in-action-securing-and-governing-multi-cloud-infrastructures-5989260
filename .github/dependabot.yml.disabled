@@ -7,7 +7,7 @@ updates:
       interval: daily
     labels: [dependencies, javascript, aws]
     groups:
-      aws-sdk-security:
+      aws-sdks:
         patterns: ["@aws-sdk*"]
         applies-to: version-updates
       minor-patch:
@@ -21,7 +21,7 @@ updates:
       interval: daily
     labels: [dependencies, javascript, azure]
     groups:
-      azure-sdk-security:
+      azure-sdks:
         patterns: ["@azure*"]
         applies-to: version-updates
       minor-patch:
