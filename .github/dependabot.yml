@@ -5,28 +5,28 @@ updates:
     directory: "/app/frontend"
     schedule:
       interval: daily
-    labels: [aws]
+    labels: [dependencies, javascript, aws]
 
   # Backend app (deployed on Azure)
   - package-ecosystem: "npm"
     directory: "/app/backend"
     schedule:
       interval: daily
-    labels: [azure]
+    labels: [dependencies, javascript, azure]
 
   # Terraform – AWS
   - package-ecosystem: "terraform"
     directory: "/infra/aws"
     schedule:
       interval: daily
-    labels: [aws]
+    labels: [dependencies, terraform, aws]
 
   # Terraform – Azure
   - package-ecosystem: "terraform"
     directory: "/infra/azure"
     schedule:
       interval: daily
-    labels: [azure]
+    labels: [dependencies, terraform, azure]
 
   # Github Actions
   - package-ecosystem: "github-actions"
