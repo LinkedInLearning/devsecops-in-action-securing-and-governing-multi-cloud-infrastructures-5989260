@@ -29,6 +29,9 @@ importers:
 
   frontend:
     dependencies:
+      '@aws-sdk/client-s3':
+        specifier: ^3.645.0
+        version: 3.899.0
       express:
         specifier: ^4.19.2
         version: 4.21.2
