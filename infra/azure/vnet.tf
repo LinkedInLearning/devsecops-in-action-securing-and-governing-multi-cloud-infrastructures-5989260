@@ -25,8 +25,19 @@ resource "azurerm_subnet" "twingate_azure_container_subnet" {
 
   delegation {
     name = "delegation"
+
     service_delegation {
       name = "Microsoft.ContainerInstance/containerGroups"
+      actions = [
+        "Microsoft.Network/virtualNetworks/subnets/join/action",
+        "Microsoft.Network/virtualNetworks/subnets/prepareNetworkPolicies/action"
+      ]
     }
+  }
+
+  lifecycle {
+    ignore_changes = [
+      delegation[0].service_delegation[0].actions
+    ]
   }
 }
