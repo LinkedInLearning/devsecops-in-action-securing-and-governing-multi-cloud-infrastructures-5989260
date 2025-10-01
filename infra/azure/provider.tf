@@ -19,6 +19,27 @@ terraform {
       source  = "DopplerHQ/doppler"
       version = "1.20.0"
     }
+    # Intentionally old pins to trigger Dependabot PRs
+    azuread = {
+      source  = "hashicorp/azuread"
+      version = "~> 2.30"
+    }
+    null = {
+      source  = "hashicorp/null"
+      version = "~> 2.1"
+    }
+    tls = {
+      source  = "hashicorp/tls"
+      version = "~> 3.0"
+    }
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = "~> 2.11"
+    }
+    helm = {
+      source  = "hashicorp/helm"
+      version = "~> 2.7"
+    }
   }
 }
 provider "azurerm" {

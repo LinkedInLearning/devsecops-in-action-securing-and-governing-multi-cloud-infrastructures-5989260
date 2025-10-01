@@ -20,6 +20,31 @@ terraform {
       source  = "DopplerHQ/doppler"
       version = "1.20.0"
     }
+    # Intentionally old pins to trigger Dependabot PRs
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 2.2"
+    }
+    null = {
+      source  = "hashicorp/null"
+      version = "~> 2.1"
+    }
+    tls = {
+      source  = "hashicorp/tls"
+      version = "~> 3.0"
+    }
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = "~> 2.11"
+    }
+    helm = {
+      source  = "hashicorp/helm"
+      version = "~> 2.7"
+    }
+    http = {
+      source  = "hashicorp/http"
+      version = "~> 2.0"
+    }
   }
 }
 
