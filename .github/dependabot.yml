@@ -7,12 +7,12 @@ updates:
       interval: daily
     labels: [dependencies, javascript, aws]
     groups:
-      aws-sdks:
-        patterns: ["@aws-sdk/*"]
-        applies-to: security-updates
+      aws-sdk-security:
+        patterns: ["@aws-sdk*"]
+        applies-to: version-updates
       minor-patch:
-        applies-to: security-updates
         update-types: ["minor", "patch"]
+        applies-to: security-updates
 
   # Backend app (deployed on Azure)
   - package-ecosystem: "npm"
@@ -21,12 +21,12 @@ updates:
       interval: daily
     labels: [dependencies, javascript, azure]
     groups:
-      azure-sdks:
-        patterns: ["@azure/*"]
-        applies-to: security-updates
+      azure-sdk-security:
+        patterns: ["@azure*"]
+        applies-to: version-updates
       minor-patch:
-        applies-to: security-updates
         update-types: ["minor", "patch"]
+        applies-to: security-updates
 
   # Terraform – AWS
   - package-ecosystem: "terraform"
