@@ -1,35 +1,35 @@
-version: 2
-updates:
-  # Frontend app (deployed on AWS)
-  - package-ecosystem: "npm"
-    directory: "/app/frontend"
-    schedule:
-      interval: daily
-    labels: [aws]
+# version: 2
+# updates:
+#   # Frontend app (deployed on AWS)
+#   - package-ecosystem: "npm"
+#     directory: "/app/frontend"
+#     schedule:
+#       interval: daily
+#     labels: [aws]
 
-  # Backend app (deployed on Azure)
-  - package-ecosystem: "npm"
-    directory: "/app/backend"
-    schedule:
-      interval: daily
-    labels: [azure]
+#   # Backend app (deployed on Azure)
+#   - package-ecosystem: "npm"
+#     directory: "/app/backend"
+#     schedule:
+#       interval: daily
+#     labels: [azure]
 
-  # Terraform – AWS
-  - package-ecosystem: "terraform"
-    directory: "/infra/aws"
-    schedule:
-      interval: daily
-    labels: [aws]
+#   # Terraform – AWS
+#   - package-ecosystem: "terraform"
+#     directory: "/infra/aws"
+#     schedule:
+#       interval: daily
+#     labels: [aws]
 
-  # Terraform – Azure
-  - package-ecosystem: "terraform"
-    directory: "/infra/azure"
-    schedule:
-      interval: daily
-    labels: [azure]
+#   # Terraform – Azure
+#   - package-ecosystem: "terraform"
+#     directory: "/infra/azure"
+#     schedule:
+#       interval: daily
+#     labels: [azure]
 
-  # Github Actions
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: daily
+#   # Github Actions
+#   - package-ecosystem: "github-actions"
+#     directory: "/"
+#     schedule:
+#       interval: daily
