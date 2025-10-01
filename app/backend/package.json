@@ -6,6 +6,7 @@
     "start": "node backend.js"
   },
   "dependencies": {
+    "@azure/storage-blob": "^12.19.0",
     "express": "^4.19.2"
   }
 }
