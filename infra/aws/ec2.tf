@@ -40,7 +40,7 @@ resource "aws_instance" "frontend" {
   instance_type               = "t3.micro"
   subnet_id                   = module.vpc.public_subnets[0]
   vpc_security_group_ids      = [aws_security_group.frontend_sg.id]
-  associate_public_ip_address = false
+  associate_public_ip_address = true
   user_data_replace_on_change = true
   private_ip                  = "10.20.101.101"
   user_data                   = <<-BASH

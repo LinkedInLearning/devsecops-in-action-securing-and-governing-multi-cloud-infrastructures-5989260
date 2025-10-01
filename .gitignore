@@ -67,3 +67,6 @@ dist/
 build/
 .cache/
 .tmp/
+
+# GitGuardian
+.cache_ggshield
