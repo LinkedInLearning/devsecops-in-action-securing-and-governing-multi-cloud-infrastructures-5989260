@@ -56,7 +56,6 @@ jobs:
           # https://github.com/DataDog/osv-scanner/releases
           DATADOG_OSV_SCANNER_URL=https://github.com/DataDog/osv-scanner/releases/latest/download/osv-scanner_linux_amd64.zip
 
-
           # Install OSV Scanner
           sudo mkdir /osv-scanner
           sudo curl -L -o /osv-scanner/osv-scanner.zip $DATADOG_OSV_SCANNER_URL
