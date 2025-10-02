@@ -136,6 +136,11 @@ resource "azurerm_linux_virtual_machine" "red30tech_vm" {
     storage_account_type = "Standard_LRS"
     disk_size_gb         = 30
   }
+
+  tags = {
+    Environment = var.environment
+    Project     = var.project
+  }
 }
 
 output "backend_url" {

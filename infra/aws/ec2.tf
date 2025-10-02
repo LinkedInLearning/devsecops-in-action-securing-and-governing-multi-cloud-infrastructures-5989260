@@ -111,12 +111,18 @@ resource "aws_instance" "frontend" {
     systemctl restart frontend.service
   BASH
 
-  tags = { Name = "frontend" }
+  tags = {
+    Name        = "frontend"
+    Environment = var.environment
+    Project     = var.project
+  }
 }
 
 resource "aws_eip" "frontend" {
   domain = "vpc"
-  tags   = { Name = "frontend-eip" }
+  tags = {
+    Name = "frontend-eip"
+  }
 }
 
 resource "aws_eip_association" "frontend" {

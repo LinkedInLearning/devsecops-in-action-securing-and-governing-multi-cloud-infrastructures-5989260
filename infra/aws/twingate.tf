@@ -55,7 +55,9 @@ resource "aws_instance" "twingate_connector" {
   EOT
 
   tags = {
-    "Name" = "Twingate Connector"
+    Name        = "Twingate Connector"
+    Environment = var.environment
+    Project     = var.project
   }
 }
 

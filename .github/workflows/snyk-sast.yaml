@@ -3,6 +3,9 @@ name: Multi-Cloud SAST
 on:
   pull_request:
     branches: [ "main" ]
+    paths:
+      - 'app/frontend/**'
+      - 'app/backend/**'
 
 jobs:
   snyk-sast:

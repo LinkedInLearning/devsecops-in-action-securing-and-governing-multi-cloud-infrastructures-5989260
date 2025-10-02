@@ -2,8 +2,7 @@ name: Multi-Cloud DAST
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "main" ]
 
 permissions:
   contents: read
