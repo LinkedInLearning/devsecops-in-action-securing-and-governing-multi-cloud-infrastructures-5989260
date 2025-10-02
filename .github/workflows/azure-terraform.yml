@@ -7,6 +7,7 @@ on:
       - 'infra/azure/**'
       - 'app/backend/**'
   pull_request:
+    branches: [ "main" ]
     paths:
       - 'infra/azure/**'
       - 'app/backend/**'

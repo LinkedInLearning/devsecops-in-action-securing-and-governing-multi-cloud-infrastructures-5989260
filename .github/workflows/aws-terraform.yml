@@ -7,6 +7,7 @@ on:
       - 'infra/aws/**'
       - 'app/frontend/**'
   pull_request:
+    branches: [ "main" ]
     paths:
       - 'infra/aws/**'
       - 'app/frontend/**'
