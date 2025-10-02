@@ -1,8 +1,14 @@
 name: Multi-Cloud DAST
-'on':
+
+on:
   push:
     branches:
       - main
+
+permissions:
+  contents: read
+  issues: write
+
 jobs:
   snyk-sast:
     runs-on: ubuntu-latest
@@ -12,10 +18,13 @@ jobs:
         include:
           - cloud: aws
             path: app/frontend
+            scan_type: full
             target: 'http://red30tech.aws.internal'
           - cloud: azure
             path: app/backend
+            scan_type: api
             target: 'http://red30tech.api.azure.internal'
+    
     steps:
       - uses: twingate/github-action@v1
         with:
@@ -23,7 +32,15 @@ jobs:
 
       - uses: actions/checkout@v4
 
-      - name: 'ZAP Scan on ${{ matrix.path }}'
+      - name: ZAP Scan on ${{ matrix.path }}
+        if: ${{ matrix.scan_type == 'full' }}
         uses: zaproxy/action-full-scan@v0.12.0
         with:
           target: ${{ matrix.target }}
+
+      - name: ZAP API Scan on ${{ matrix.path }}
+        if: ${{ matrix.scan_type == 'api' }}
+        uses: zaproxy/action-api-scan@v0.9.0
+        with:
+          target: ${{ matrix.target }}
+          format: openapi
