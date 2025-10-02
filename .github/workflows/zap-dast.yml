@@ -23,7 +23,7 @@ jobs:
           - cloud: azure
             path: app/backend
             scan_type: api
-            target: 'http://api.red30tech.azure.internal'
+            target: 'http://api.red30tech.azure.internal/api'
     
     steps:
       - uses: twingate/github-action@v1
