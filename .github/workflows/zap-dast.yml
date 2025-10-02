@@ -36,6 +36,7 @@ jobs:
         with:
           target: ${{ matrix.target }}
           issue_title: ${{ matrix.cloud }} ${{ matrix.path }} Full Scan Report
+          artifact_name: zap-${{ matrix.cloud }}-full-${{ github.run_id }}-${{ github.run_attempt }}          
 
       - name: ZAP API Scan on ${{ matrix.path }}
         if: ${{ matrix.scan_type == 'api' }}
@@ -43,3 +44,4 @@ jobs:
         with:
           target: ${{ matrix.target }}
           issue_title: ${{ matrix.cloud }} ${{ matrix.path }} API Scan Report
+          artifact_name: zap-${{ matrix.cloud }}-api-${{ github.run_id }}-${{ github.run_attempt }}
