@@ -20,7 +20,7 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
             --paginate \
-            /orgs/${{ github.repository_owner }}/repos |
+            /users/${{ github.repository_owner }}/repos |
             jq -r '[.[] | select(.archived == false) | .name | tostring]' | jq -c '.')
           echo "repo_list=$repo_list" >> $GITHUB_OUTPUT
 
