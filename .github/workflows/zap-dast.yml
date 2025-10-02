@@ -1,0 +1,29 @@
+name: Multi-Cloud DAST
+'on':
+  push:
+    branches:
+      - main
+jobs:
+  snyk-sast:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - cloud: aws
+            path: app/frontend
+            target: 'http://red30tech.aws.internal'
+          - cloud: azure
+            path: app/backend
+            target: 'http://red30tech.api.azure.internal'
+    steps:
+      - uses: twingate/github-action@v1
+        with:
+          service-key: ${{ secrets.TWINGATE_GHA_SERVICE_KEY }}
+
+      - uses: actions/checkout@v4
+
+      - name: 'ZAP Scan on ${{ matrix.path }}'
+        uses: zaproxy/action-full-scan@v0.12.0
+        with:
+          target: ${{ matrix.target }}

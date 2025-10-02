@@ -1,4 +1,4 @@
-name: Multi-Cloud Snyk Code
+name: Multi-Cloud SAST
 
 on:
   pull_request:
