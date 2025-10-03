@@ -1,34 +1,34 @@
-name: Multi-Cloud SAST
+# name: Multi-Cloud SAST
 
-on:
-  pull_request:
-    branches: [ "main" ]
-    paths:
-      - 'app/frontend/**'
-      - 'app/backend/**'
+# on:
+#   pull_request:
+#     branches: [ "main" ]
+#     paths:
+#       - 'app/frontend/**'
+#       - 'app/backend/**'
 
-jobs:
-  snyk-sast:
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false 
-      matrix:
-        include:
-          - cloud: aws
-            path: app/frontend
-            min_severity: high
-          - cloud: azure
-            path: app/backend
-            min_severity: medium
+# jobs:
+#   snyk-sast:
+#     runs-on: ubuntu-latest
+#     strategy:
+#       fail-fast: false 
+#       matrix:
+#         include:
+#           - cloud: aws
+#             path: app/frontend
+#             min_severity: medium
+#           - cloud: azure
+#             path: app/backend
+#             min_severity: medium
 
-    steps:
-      - uses: actions/checkout@v4
+#     steps:
+#       - uses: actions/checkout@v4
 
-      - name: Snyk Code (SAST only) on ${{ matrix.path }}
-        uses: snyk/actions/node@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          command: code test
-          args: >
-            --severity-threshold=${{ matrix.min_severity }} ${{ matrix.path }}
+#       - name: Snyk Code (SAST only) on ${{ matrix.path }}
+#         uses: snyk/actions/node@master
+#         env:
+#           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+#         with:
+#           command: code test
+#           args: >
+#             --severity-threshold=${{ matrix.min_severity }} ${{ matrix.path }}

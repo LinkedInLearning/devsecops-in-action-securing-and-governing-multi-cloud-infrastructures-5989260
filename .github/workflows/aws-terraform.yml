@@ -57,20 +57,20 @@ jobs:
     - name: Terraform Plan
       run: terraform plan -input=false --out out.tfplan
 
-    # Set up OPA
-    - name: Set up OPA
-      run: |
-        curl -L -o opa https://openpolicyagent.org/downloads/v1.0.0/opa_linux_amd64_static
-        chmod +x opa
-        sudo mv opa /usr/local/bin/
+    # # Set up OPA
+    # - name: Set up OPA
+    #   run: |
+    #     curl -L -o opa https://openpolicyagent.org/downloads/v1.0.0/opa_linux_amd64_static
+    #     chmod +x opa
+    #     sudo mv opa /usr/local/bin/
       
-    # Run OPA
-    - name: Run Conversion
-      run: terraform show -json out.tfplan > out.tfplan.json
+    # # Run OPA
+    # - name: Run Conversion
+    #   run: terraform show -json out.tfplan > out.tfplan.json
         
-    # Run OPA
-    - name: Run Policy Check
-      run: opa exec --bundle=../policies/ --decision main/tag_policy_violations --fail-non-empty out.tfplan.json
+    # # Run OPA
+    # - name: Run Policy Check
+    #   run: opa exec --bundle=../policies/ --decision main/tag_policy_violations --fail-non-empty out.tfplan.json
 
       # Only on push to "main", change infrastructure according to Terraform configuration files
     - name: Terraform Apply

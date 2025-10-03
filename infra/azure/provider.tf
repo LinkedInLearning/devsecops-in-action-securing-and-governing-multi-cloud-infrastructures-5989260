@@ -45,3 +45,7 @@ terraform {
 provider "azurerm" {
   features {}
 }
+
+provider "doppler" {
+  doppler_token = var.doppler_token
+}

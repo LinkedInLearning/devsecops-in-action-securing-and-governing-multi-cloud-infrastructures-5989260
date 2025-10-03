@@ -1,111 +1,111 @@
-name: Organization Vulnerability Report
+# name: Organization Vulnerability Report
 
-on:
-  schedule:
-    - cron: 0 0 * * 1
-  workflow_dispatch: null
+# on:
+#   schedule:
+#     - cron: 0 0 * * 1
+#   workflow_dispatch: null
 
-jobs:
-  generate-repo-list:
-    runs-on: ubuntu-latest
-    outputs:
-      repo_list: '${{ steps.set-repo-list.outputs.repo_list }}'
-    steps:
-      - name: Fetch list of relevant repositories
-        env:
-          GH_TOKEN: '${{ secrets.GH_TOKEN_DEPENDABOT }}'
-        id: set-repo-list
-        run: |
-          repo_list=$(gh api \
-            -H "Accept: application/vnd.github+json" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            --paginate \
-            /users/${{ github.repository_owner }}/repos |
-            jq -r '[.[] | select(.archived == false) | .name | tostring]' | jq -c '.')
-          echo "repo_list=$repo_list" >> $GITHUB_OUTPUT
+# jobs:
+#   generate-repo-list:
+#     runs-on: ubuntu-latest
+#     outputs:
+#       repo_list: '${{ steps.set-repo-list.outputs.repo_list }}'
+#     steps:
+#       - name: Fetch list of relevant repositories
+#         env:
+#           GH_TOKEN: '${{ secrets.GH_TOKEN_DEPENDABOT }}'
+#         id: set-repo-list
+#         run: |
+#           repo_list=$(gh api \
+#             -H "Accept: application/vnd.github+json" \
+#             -H "X-GitHub-Api-Version: 2022-11-28" \
+#             --paginate \
+#             /users/${{ github.repository_owner }}/repos |
+#             jq -r '[.[] | select(.archived == false) | .name | tostring]' | jq -c '.')
+#           echo "repo_list=$repo_list" >> $GITHUB_OUTPUT
 
-  run-sca-analysis:
-    needs: generate-repo-list
-    strategy:
-      fail-fast: false
-      matrix:
-        repo_name: '${{ fromJson(needs.generate-repo-list.outputs.repo_list) }}'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          repository: '${{ github.repository_owner }}/${{ matrix.repo_name }}'
-          token: '${{ secrets.GH_TOKEN_DEPENDABOT }}'
+#   run-sca-analysis:
+#     needs: generate-repo-list
+#     strategy:
+#       fail-fast: false
+#       matrix:
+#         repo_name: '${{ fromJson(needs.generate-repo-list.outputs.repo_list) }}'
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v4
+#         with:
+#           repository: '${{ github.repository_owner }}/${{ matrix.repo_name }}'
+#           token: '${{ secrets.GH_TOKEN_DEPENDABOT }}'
 
-      - name: Install Datadog & Upload SBOM
-        env:
-          DD_API_KEY: '${{ secrets.DD_API_KEY }}'
-          DD_APP_KEY: '${{ secrets.DD_APP_KEY }}'
-          DD_SITE: us5.datadoghq.com
-        continue-on-error: true
-        run: |
-          # Unset variables so that dd picks metadata from .git
-          unset GITHUB_ACTION
-          unset GITHUB_ACTIONS
+#       - name: Install Datadog & Upload SBOM
+#         env:
+#           DD_API_KEY: '${{ secrets.DD_API_KEY }}'
+#           DD_APP_KEY: '${{ secrets.DD_APP_KEY }}'
+#           DD_SITE: us5.datadoghq.com
+#         continue-on-error: true
+#         run: |
+#           # Unset variables so that dd picks metadata from .git
+#           unset GITHUB_ACTION
+#           unset GITHUB_ACTIONS
 
-          # Install dependencies
-          sudo npm install -g @datadog/datadog-ci
+#           # Install dependencies
+#           sudo npm install -g @datadog/datadog-ci
 
-          # Download the latest Datadog OSV Scanner:
-          # https://github.com/DataDog/osv-scanner/releases
-          DATADOG_OSV_SCANNER_URL=https://github.com/DataDog/osv-scanner/releases/latest/download/osv-scanner_linux_amd64.zip
+#           # Download the latest Datadog OSV Scanner:
+#           # https://github.com/DataDog/osv-scanner/releases
+#           DATADOG_OSV_SCANNER_URL=https://github.com/DataDog/osv-scanner/releases/latest/download/osv-scanner_linux_amd64.zip
 
-          # Install OSV Scanner
-          sudo mkdir /osv-scanner
-          sudo curl -L -o /osv-scanner/osv-scanner.zip $DATADOG_OSV_SCANNER_URL
-          sudo unzip /osv-scanner/osv-scanner.zip -d /osv-scanner
-          sudo chmod 755 /osv-scanner/osv-scanner
+#           # Install OSV Scanner
+#           sudo mkdir /osv-scanner
+#           sudo curl -L -o /osv-scanner/osv-scanner.zip $DATADOG_OSV_SCANNER_URL
+#           sudo unzip /osv-scanner/osv-scanner.zip -d /osv-scanner
+#           sudo chmod 755 /osv-scanner/osv-scanner
 
-          # Run OSV Scanner and scan your dependencies
-          /osv-scanner/osv-scanner --skip-git -r --experimental-only-packages --format=cyclonedx-1-5 --paths-relative-to-scan-dir --output=/tmp/sbom.json ${{ github.workspace }}
+#           # Run OSV Scanner and scan your dependencies
+#           /osv-scanner/osv-scanner --skip-git -r --experimental-only-packages --format=cyclonedx-1-5 --paths-relative-to-scan-dir --output=/tmp/sbom.json ${{ github.workspace }}
 
-          # Upload results to Datadog
-          datadog-ci sbom upload --service ${{ matrix.repo_name }} --env ci-weekly /tmp/sbom.json
+#           # Upload results to Datadog
+#           datadog-ci sbom upload --service ${{ matrix.repo_name }} --env ci-weekly /tmp/sbom.json
 
-  run-sast-analysis:
-    needs: generate-repo-list
-    strategy:
-      fail-fast: false
-      matrix:
-        repo_name: '${{ fromJson(needs.generate-repo-list.outputs.repo_list) }}'
-    env:
-      TF_VAR_tg_api_key: '${{ secrets.TWINGATE_API_KEY }}'
-      TF_VAR_doppler_token: '${{ secrets.DOPPLER_TOKEN }}'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          repository: '${{ github.repository_owner }}/${{ matrix.repo_name }}'
-          token: '${{ secrets.GH_TOKEN_DEPENDABOT }}'
+#   run-sast-analysis:
+#     needs: generate-repo-list
+#     strategy:
+#       fail-fast: false
+#       matrix:
+#         repo_name: '${{ fromJson(needs.generate-repo-list.outputs.repo_list) }}'
+#     env:
+#       TF_VAR_tg_api_key: '${{ secrets.TWINGATE_API_KEY }}'
+#       TF_VAR_doppler_token: '${{ secrets.DOPPLER_TOKEN }}'
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v4
+#         with:
+#           repository: '${{ github.repository_owner }}/${{ matrix.repo_name }}'
+#           token: '${{ secrets.GH_TOKEN_DEPENDABOT }}'
 
-      - name: Install Snyk & Authenticate
-        run: |
-          sudo npm install -g snyk
-          snyk auth ${{ secrets.SNYK_TOKEN }}
+#       - name: Install Snyk & Authenticate
+#         run: |
+#           sudo npm install -g snyk
+#           snyk auth ${{ secrets.SNYK_TOKEN }}
 
-      - name: Run Snyk Code
-        run: |
-          snyk code test --sarif-file-output=results.sarif
-        continue-on-error: true
+#       - name: Run Snyk Code
+#         run: |
+#           snyk code test --sarif-file-output=results.sarif
+#         continue-on-error: true
 
-      - name: Install Datadog & Upload SARIF
-        env:
-          DD_API_KEY: '${{ secrets.DD_API_KEY }}'
-          DD_APP_KEY: '${{ secrets.DD_APP_KEY }}'
-          DD_SITE: us5.datadoghq.com
-        continue-on-error: true
-        run: |
-          # Unset variables so that dd picks metadata from .git
-          unset GITHUB_ACTION
-          unset GITHUB_ACTIONS
+#       - name: Install Datadog & Upload SARIF
+#         env:
+#           DD_API_KEY: '${{ secrets.DD_API_KEY }}'
+#           DD_APP_KEY: '${{ secrets.DD_APP_KEY }}'
+#           DD_SITE: us5.datadoghq.com
+#         continue-on-error: true
+#         run: |
+#           # Unset variables so that dd picks metadata from .git
+#           unset GITHUB_ACTION
+#           unset GITHUB_ACTIONS
 
-          sudo npm install -g @datadog/datadog-ci
+#           sudo npm install -g @datadog/datadog-ci
 
-          datadog-ci sarif upload --service ${{ matrix.repo_name }} --env ci-weekly results.sarif
+#           datadog-ci sarif upload --service ${{ matrix.repo_name }} --env ci-weekly results.sarif

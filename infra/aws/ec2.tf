@@ -90,25 +90,25 @@ resource "aws_instance" "frontend" {
     systemctl daemon-reload
     systemctl enable --now frontend.service
 
-    # --- Twingate Headless Client ---
-    curl -fsSL https://binaries.twingate.com/client/linux/install.sh | bash
-    install -d -m 0700 /etc/twingate
-    cat >/etc/twingate/service_key.json <<EOF
-    ${twingate_service_account_key.aws_frontend_sa_key.token}
-    EOF
-    /usr/bin/twingate setup --headless /etc/twingate/service_key.json
-    systemctl enable --now twingate
+    # # --- Twingate Headless Client ---
+    # curl -fsSL https://binaries.twingate.com/client/linux/install.sh | bash
+    # install -d -m 0700 /etc/twingate
+    # cat >/etc/twingate/service_key.json <<EOF
+    # $${twingate_service_account_key.aws_frontend_sa_key.token}
+    # EOF
+    # /usr/bin/twingate setup --headless /etc/twingate/service_key.json
+    # systemctl enable --now twingate
 
-    # --- Doppler Integration ---
-    curl -Ls https://cli.doppler.com/install.sh | bash
-    export DOPPLER_TOKEN="${doppler_service_token.frontend_dev_aws.key}"
-    doppler secrets download \
-      --project red30tech-frontend \
-      --config dev \
-      --format env --no-file > /etc/default/frontend.env
-    sed -i 's|^Environment=.*$|EnvironmentFile=/etc/default/frontend.env|' /etc/systemd/system/frontend.service
-    systemctl daemon-reload
-    systemctl restart frontend.service
+    # # --- Doppler Integration ---
+    # curl -Ls https://cli.doppler.com/install.sh | bash
+    # export DOPPLER_TOKEN="$${doppler_service_token.frontend_dev_aws.key}"
+    # doppler secrets download \
+    #   --project red30tech-frontend \
+    #   --config dev \
+    #   --format env --no-file > /etc/default/frontend.env
+    # sed -i 's|^Environment=.*$|EnvironmentFile=/etc/default/frontend.env|' /etc/systemd/system/frontend.service
+    # systemctl daemon-reload
+    # systemctl restart frontend.service
   BASH
 
   tags = {
