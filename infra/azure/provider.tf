@@ -46,6 +46,11 @@ provider "azurerm" {
   features {}
 }
 
+provider "twingate" {
+  api_token = var.tg_api_key
+  network   = var.tg_network
+}
+
 provider "doppler" {
   doppler_token = var.doppler_token
 }

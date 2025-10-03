@@ -1,18 +1,3 @@
-variable "tg_network" {
-  type    = string
-  default = "red30tech"
-}
-
-variable "tg_api_key" {
-  type      = string
-  sensitive = true
-}
-
-provider "twingate" {
-  api_token = var.tg_api_key
-  network   = var.tg_network
-}
-
 # resource "twingate_remote_network" "aws_network" {
 #   name = "Red30Tech AWS Dev Remote Network"
 # }
