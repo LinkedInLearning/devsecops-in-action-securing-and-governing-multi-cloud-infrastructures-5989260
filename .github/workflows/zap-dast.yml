@@ -9,7 +9,7 @@ permissions:
   issues: write
 
 jobs:
-  snyk-sast:
+  zap-dast:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
