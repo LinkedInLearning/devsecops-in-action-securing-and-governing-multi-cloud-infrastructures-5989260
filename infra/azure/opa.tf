@@ -1,5 +1,5 @@
 resource "azurerm_linux_virtual_machine" "opa_azure" {
-  name                            = "red30tech-vm"
+  name                            = "opa-azure-vm"
   location                        = azurerm_resource_group.red30tech_rg.location
   resource_group_name             = azurerm_resource_group.red30tech_rg.name
   size                            = "Standard_B1s"
