@@ -3,7 +3,7 @@ resource "aws_instance" "opa_aws" {
   instance_type = "t3.micro"
 
   tags = {
-    Name        = "HelloWorld"
+    Name        = "OPA AWS"
     Environment = "Sandbox"
     Project     = "Red30Tech"
   }
