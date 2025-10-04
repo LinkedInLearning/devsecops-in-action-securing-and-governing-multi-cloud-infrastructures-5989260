@@ -1,5 +1,5 @@
-# COURSENAME
-This is the repository for the LinkedIn Learning course `course-name`. The full course is available from [LinkedIn Learning][lil-course-url].
+# DevSecOps in Action: Securing and Governing Multi-Cloud Infrastructures
+This is the repository for the LinkedIn Learning course DevSecOps in Action: Securing and Governing Multi-Cloud Infrastructures. The full course is available from [LinkedIn Learning][lil-course-url].
 
 ![lil-thumbnail-url]
 
