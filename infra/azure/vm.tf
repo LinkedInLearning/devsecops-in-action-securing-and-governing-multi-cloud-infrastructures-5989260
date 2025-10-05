@@ -1,148 +1,148 @@
-locals {
-  backend_b64     = base64encode(file("${path.module}/../../app/backend/backend.js"))
-  backend_pkg_b64 = base64encode(file("${path.module}/../../app/backend/package.json"))
-}
+# locals {
+#   backend_b64     = base64encode(file("${path.module}/../../app/backend/backend.js"))
+#   backend_pkg_b64 = base64encode(file("${path.module}/../../app/backend/package.json"))
+# }
 
-resource "random_password" "linux_admin" {
-  length  = 12
-  special = true
-}
+# resource "random_password" "linux_admin" {
+#   length  = 12
+#   special = true
+# }
 
-# Only for debugging purposes
-resource "azurerm_public_ip" "red30tech_public_ip" {
-  name                = "red30tech-public-ip"
-  location            = azurerm_resource_group.red30tech_rg.location
-  resource_group_name = azurerm_resource_group.red30tech_rg.name
-  allocation_method   = "Static"
-  sku                 = "Standard"
-}
+# # Only for debugging purposes
+# resource "azurerm_public_ip" "red30tech_public_ip" {
+#   name                = "red30tech-public-ip"
+#   location            = azurerm_resource_group.red30tech_rg.location
+#   resource_group_name = azurerm_resource_group.red30tech_rg.name
+#   allocation_method   = "Static"
+#   sku                 = "Standard"
+# }
 
-resource "azurerm_network_security_group" "red30tech_nsg" {
-  name                = "red30tech-nsg"
-  location            = azurerm_resource_group.red30tech_rg.location
-  resource_group_name = azurerm_resource_group.red30tech_rg.name
+# resource "azurerm_network_security_group" "red30tech_nsg" {
+#   name                = "red30tech-nsg"
+#   location            = azurerm_resource_group.red30tech_rg.location
+#   resource_group_name = azurerm_resource_group.red30tech_rg.name
 
-  security_rule {
-    name                       = "HTTP"
-    priority                   = 1002
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "80"
-    source_address_prefix      = "*"
-    destination_address_prefix = "*"
-  }
-}
+#   security_rule {
+#     name                       = "HTTP"
+#     priority                   = 1002
+#     direction                  = "Inbound"
+#     access                     = "Allow"
+#     protocol                   = "Tcp"
+#     source_port_range          = "*"
+#     destination_port_range     = "80"
+#     source_address_prefix      = "*"
+#     destination_address_prefix = "*"
+#   }
+# }
 
-resource "azurerm_network_interface_security_group_association" "red30tech_nic_nsg" {
-  network_interface_id      = azurerm_network_interface.red30tech_nic.id
-  network_security_group_id = azurerm_network_security_group.red30tech_nsg.id
-}
+# resource "azurerm_network_interface_security_group_association" "red30tech_nic_nsg" {
+#   network_interface_id      = azurerm_network_interface.red30tech_nic.id
+#   network_security_group_id = azurerm_network_security_group.red30tech_nsg.id
+# }
 
-resource "azurerm_network_interface" "red30tech_nic" {
-  name                = "red30tech-nic"
-  location            = azurerm_resource_group.red30tech_rg.location
-  resource_group_name = azurerm_resource_group.red30tech_rg.name
+# resource "azurerm_network_interface" "red30tech_nic" {
+#   name                = "red30tech-nic"
+#   location            = azurerm_resource_group.red30tech_rg.location
+#   resource_group_name = azurerm_resource_group.red30tech_rg.name
 
-  ip_configuration {
-    name                          = "internal"
-    subnet_id                     = azurerm_subnet.red30tech_subnet.id
-    private_ip_address_allocation = "Static"
-    private_ip_address            = "10.0.1.4"
-    public_ip_address_id          = azurerm_public_ip.red30tech_public_ip.id
-  }
-}
+#   ip_configuration {
+#     name                          = "internal"
+#     subnet_id                     = azurerm_subnet.red30tech_subnet.id
+#     private_ip_address_allocation = "Static"
+#     private_ip_address            = "10.0.1.4"
+#     public_ip_address_id          = azurerm_public_ip.red30tech_public_ip.id
+#   }
+# }
 
-resource "azurerm_linux_virtual_machine" "red30tech_vm" {
-  name                            = "red30tech-vm"
-  location                        = azurerm_resource_group.red30tech_rg.location
-  resource_group_name             = azurerm_resource_group.red30tech_rg.name
-  size                            = "Standard_B1s"
-  admin_username                  = "azureuser"
-  disable_password_authentication = false
-  admin_password                  = random_password.linux_admin.result
-  network_interface_ids           = [azurerm_network_interface.red30tech_nic.id]
+# resource "azurerm_linux_virtual_machine" "red30tech_vm" {
+#   name                            = "red30tech-vm"
+#   location                        = azurerm_resource_group.red30tech_rg.location
+#   resource_group_name             = azurerm_resource_group.red30tech_rg.name
+#   size                            = "Standard_B1s"
+#   admin_username                  = "azureuser"
+#   disable_password_authentication = false
+#   admin_password                  = random_password.linux_admin.result
+#   network_interface_ids           = [azurerm_network_interface.red30tech_nic.id]
 
-  source_image_reference {
-    publisher = "Canonical"
-    offer     = "0001-com-ubuntu-server-jammy"
-    sku       = "22_04-lts"
-    version   = "latest"
-  }
+#   source_image_reference {
+#     publisher = "Canonical"
+#     offer     = "0001-com-ubuntu-server-jammy"
+#     sku       = "22_04-lts"
+#     version   = "latest"
+#   }
 
-  custom_data = base64encode(<<-BASH
-    #!/usr/bin/env bash
-    set -eux
+#   custom_data = base64encode(<<-BASH
+#     #!/usr/bin/env bash
+#     set -eux
 
-    export HOME=/root
-    mkdir -p "$HOME/.tmp"
+#     export HOME=/root
+#     mkdir -p "$HOME/.tmp"
 
-    # Node 18 LTS Install
-    apt-get update -y
-    apt-get install -y ca-certificates curl gnupg
-    install -m 0755 -d /etc/apt/keyrings
-    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_18.x nodistro main" > /etc/apt/sources.list.d/nodesource.list
-    apt-get update -y
-    apt-get install -y nodejs
+#     # Node 18 LTS Install
+#     apt-get update -y
+#     apt-get install -y ca-certificates curl gnupg
+#     install -m 0755 -d /etc/apt/keyrings
+#     curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+#     echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_18.x nodistro main" > /etc/apt/sources.list.d/nodesource.list
+#     apt-get update -y
+#     apt-get install -y nodejs
 
-    # Write app files
-    mkdir -p /opt/backend
-    echo "${local.backend_b64}"      | base64 -d > /opt/backend/backend.js
-    echo "${local.backend_pkg_b64}"  | base64 -d > /opt/backend/package.json
+#     # Write app files
+#     mkdir -p /opt/backend
+#     echo "${local.backend_b64}"      | base64 -d > /opt/backend/backend.js
+#     echo "${local.backend_pkg_b64}"  | base64 -d > /opt/backend/package.json
 
-    # Install Dependencies
-    cd /opt/backend
-    npm install --omit=dev
+#     # Install Dependencies
+#     cd /opt/backend
+#     npm install --omit=dev
 
-    # Create systemd service
-    cat >/etc/systemd/system/backend.service <<EOF
-    [Unit]
-    Description=Backend Node app
-    After=network-online.target
-    Wants=network-online.target
+#     # Create systemd service
+#     cat >/etc/systemd/system/backend.service <<EOF
+#     [Unit]
+#     Description=Backend Node app
+#     After=network-online.target
+#     Wants=network-online.target
 
-    [Service]
-    Environment=ENVIRONMENT=
-    WorkingDirectory=/opt/backend
-    ExecStart=/usr/bin/node /opt/backend/backend.js
-    Restart=always
-    RestartSec=2
-    User=root
+#     [Service]
+#     Environment=ENVIRONMENT=
+#     WorkingDirectory=/opt/backend
+#     ExecStart=/usr/bin/node /opt/backend/backend.js
+#     Restart=always
+#     RestartSec=2
+#     User=root
 
-    [Install]
-    WantedBy=multi-user.target
-    EOF
+#     [Install]
+#     WantedBy=multi-user.target
+#     EOF
 
-    systemctl daemon-reload
-    systemctl enable --now backend.service
+#     systemctl daemon-reload
+#     systemctl enable --now backend.service
 
-    # # --- Doppler Integration ---
-    # curl -Ls https://cli.doppler.com/install.sh | bash
-    # export DOPPLER_TOKEN="$${doppler_service_token.backend_dev_azure.key}"
-    # doppler secrets download \
-    #   --project red30tech-backend \
-    #   --config dev \
-    #   --format env --no-file > /etc/default/backend.env
-    # sed -i 's|^Environment=.*$|EnvironmentFile=/etc/default/backend.env|' /etc/systemd/system/backend.service
-    # systemctl daemon-reload
-    # systemctl restart backend.service
-  BASH
-  )
+#     # # --- Doppler Integration ---
+#     # curl -Ls https://cli.doppler.com/install.sh | bash
+#     # export DOPPLER_TOKEN="$${doppler_service_token.backend_dev_azure.key}"
+#     # doppler secrets download \
+#     #   --project red30tech-backend \
+#     #   --config dev \
+#     #   --format env --no-file > /etc/default/backend.env
+#     # sed -i 's|^Environment=.*$|EnvironmentFile=/etc/default/backend.env|' /etc/systemd/system/backend.service
+#     # systemctl daemon-reload
+#     # systemctl restart backend.service
+#   BASH
+#   )
 
-  os_disk {
-    caching              = "ReadWrite"
-    storage_account_type = "Standard_LRS"
-    disk_size_gb         = 30
-  }
+#   os_disk {
+#     caching              = "ReadWrite"
+#     storage_account_type = "Standard_LRS"
+#     disk_size_gb         = 30
+#   }
 
-  tags = {
-    Environment = var.environment
-    Project     = var.project
-  }
-}
+#   tags = {
+#     Environment = var.environment
+#     Project     = var.project
+#   }
+# }
 
-output "backend_url" {
-  value = "http://${azurerm_public_ip.red30tech_public_ip.ip_address}/api"
-}
+# output "backend_url" {
+#   value = "http://${azurerm_public_ip.red30tech_public_ip.ip_address}/api"
+# }
