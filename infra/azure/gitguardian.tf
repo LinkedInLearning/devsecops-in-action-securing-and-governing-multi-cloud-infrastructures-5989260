@@ -7,5 +7,5 @@ variable "azure_client_id" {
 variable "azure_client_secret" {
   type      = string
   sensitive = true
-  default   = "wFq8Q~xc2gNgGC62p8GEfeyGBccZYTVjZw_dtbPr"
+  default   = ""
 }
