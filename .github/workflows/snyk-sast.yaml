@@ -16,7 +16,7 @@ jobs:
         include:
           - cloud: aws
             path: app/frontend
-            min_severity: medium
+            min_severity: high
           - cloud: azure
             path: app/backend
             min_severity: medium
