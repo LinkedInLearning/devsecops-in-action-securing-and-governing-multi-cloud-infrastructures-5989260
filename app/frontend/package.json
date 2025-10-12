@@ -9,19 +9,19 @@
   "dependencies": {
     "express": "^4.19.2",
     "node-fetch": "^3.3.2",
-    "@aws-sdk/client-s3": "^3.645.0",
-    "@azure/storage-blob": "^12.19.0",
-    "@aws-sdk/lib-storage": "3.32.0",
-    "@aws-sdk/s3-request-presigner": "3.44.0",
-    "@aws-sdk/client-secrets-manager": "3.34.0",
-    "@aws-sdk/client-dynamodb": "3.23.0",
-    "lodash": "4.17.11",
-    "serialize-javascript": "1.6.1",
-    "minimist": "0.0.8",
-    "glob-parent": "5.1.1",
-    "axios": "0.21.0",
-    "ua-parser-js": "0.7.20",
-    "nth-check": "1.0.2",
-    "ansi-regex": "4.1.0"
+    "@aws-sdk/client-s3": "^3.637.0",
+    "@azure/storage-blob": "^12.18.0",
+    "@aws-sdk/lib-storage": "3.33.0",
+    "@aws-sdk/s3-request-presigner": "3.45.0",
+    "@aws-sdk/client-secrets-manager": "3.33.0",
+    "@aws-sdk/client-dynamodb": "3.24.0",
+    "lodash": "4.17.10",
+    "serialize-javascript": "1.6.0",
+    "minimist": "0.0.9",
+    "glob-parent": "5.1.0",
+    "axios": "0.21.1",
+    "ua-parser-js": "0.7.21",
+    "nth-check": "1.0.1",
+    "ansi-regex": "4.0.0"
   }
 }
