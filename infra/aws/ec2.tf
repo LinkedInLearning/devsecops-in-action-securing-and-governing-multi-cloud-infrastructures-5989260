@@ -90,14 +90,14 @@ resource "aws_instance" "frontend" {
     systemctl daemon-reload
     systemctl enable --now frontend.service
 
-    # # --- Twingate Headless Client ---
-    # curl -fsSL https://binaries.twingate.com/client/linux/install.sh | bash
-    # install -d -m 0700 /etc/twingate
-    # cat >/etc/twingate/service_key.json <<EOF
-    # $${twingate_service_account_key.aws_frontend_sa_key.token}
-    # EOF
-    # /usr/bin/twingate setup --headless /etc/twingate/service_key.json
-    # systemctl enable --now twingate
+    # --- Twingate Headless Client ---
+    curl -fsSL https://binaries.twingate.com/client/linux/install.sh | bash
+    install -d -m 0700 /etc/twingate
+    cat >/etc/twingate/service_key.json <<EOF
+    ${twingate_service_account_key.aws_frontend_sa_key.token}
+    EOF
+    /usr/bin/twingate setup --headless /etc/twingate/service_key.json
+    systemctl enable --now twingate
 
     # # --- Doppler Integration ---
     # curl -Ls https://cli.doppler.com/install.sh | bash
