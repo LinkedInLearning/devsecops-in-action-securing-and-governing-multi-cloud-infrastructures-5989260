@@ -5,6 +5,8 @@ This is the repository for the LinkedIn Learning course DevSecOps in Action: Sec
 
 ## Course Description
 
+Organizations are increasingly adopting multicloud strategies for performance, reliability, and cost efficiency—but this creates challenges in security, visibility, and governance. In this course, Emmanuel Chebukati, a certified cloud security engineer, demonstrates practical DevSecOps approaches for AWS and Azure. Topics include deploying applications with Terraform, automating resources across clouds, enabling zero trust access, managing secrets with Doppler, monitoring dependency risks with Dependabot, and setting up incident responses. Emmanuel also covers how to enforce policy guardrails using Open Policy Agent and track compliance through automated systems. Designed for cloud security strategists, senior cloud architects, DevOps team leads, and directors managing cloud initiatives, this course offers hands-on demos and real-world simulations to help you apply these practices to secure, monitor, and govern multicloud environments effectively.
+
 _See the readme file in the main branch for updated instructions and information._
 ## Instructions
 This repository has branches for each of the videos in the course. You can use the branch pop up menu in github to switch to a specific branch and take a look at the course at that stage, or you can add `/tree/BRANCH_NAME` to the URL to go to the branch you want to access.
@@ -24,25 +26,16 @@ To resolve this issue:
     Add changes to git using this command: git add .
 	Commit changes using this command: git commit -m "some message"
 
-## Installing
-1. To use these exercise files, you must have the following installed:
-	- [list of requirements for course]
-2. Clone this repository into your local machine using the terminal (Mac), CMD (Windows), or a GUI tool like SourceTree.
-3. [Course-specific instructions]
-
 ## Instructor
 
-Instructor name
+Emmanuel Chebukati
 
-Instructor description
+Certified Cloud and DevSecOps Engineer | Cybersecurity Instructor              
 
-                            
-
-Check out my other courses on [LinkedIn Learning](https://www.linkedin.com/learning/instructors/).
+Check out my other courses on [LinkedIn Learning](https://www.linkedin.com/learning/instructors/emmanuel-chebukati?u=104).
 
 
 [0]: # (Replace these placeholder URLs with actual course URLs)
 
-[lil-course-url]: https://www.linkedin.com/learning/
-[lil-thumbnail-url]: https://media.licdn.com/dms/image/v2/D4E0DAQG0eDHsyOSqTA/learning-public-crop_675_1200/B4EZVdqqdwHUAY-/0/1741033220778?e=2147483647&v=beta&t=FxUDo6FA8W8CiFROwqfZKL_mzQhYx9loYLfjN-LNjgA
-
+[lil-course-url]: https://www.linkedin.com/learning/devsecops-in-action-securing-and-governing-multicloud-infrastructures
+[lil-thumbnail-url]: https://media.licdn.com/dms/image/v2/D560DAQEpAN4FrRqsAw/learning-public-crop_675_1200/B56ZqYWuuqHQAY-/0/1763492687533?e=2147483647&v=beta&t=6QEN6Ega9q34CprfMsW_EkkLhcH_teqe3kMrp8WrHO0
